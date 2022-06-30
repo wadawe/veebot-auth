@@ -1,0 +1,35 @@
+{
+    "ts-node": {
+        "files": true
+    },
+
+    "compilerOptions": {
+        "strict": true,
+        "allowJs": false,
+
+        "target": "ESNext",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+
+        "rootDir": "./src",
+        "outDir": "./build",
+        
+        "esModuleInterop": true,
+        "removeComments": true,
+        "forceConsistentCasingInFileNames": true,
+        "alwaysStrict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true
+    },
+
+    "include": [
+        "src/**/*"
+    ],
+
+    "exclude": [
+        "node_modules/**/*",
+        "**/*.test.ts",
+        "**/*.d.ts",
+        "**/*.js"
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "check-coverage": false,
+    "skip-full": false,
+    "branches": 100,
+    "lines": 100,
+    "functions": 100,
+    "statements": 100,
+    "watermarks": {
+        "lines": [ 80, 100 ],
+        "functions": [ 80, 100 ],
+        "branches": [ 80, 100 ],
+        "statements": [ 80, 100 ]
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "**/build",
+        "**/coverage",
+        "**/node_modules",
+        "**/*.test.ts",
+        "**/*.js"
+    ],
+    "reporter": [
+        "html",
+        "text"
+    ],
+    "report-dir": "./coverage",
+    "temp-directory": "./coverage/.nyc_output"
+}

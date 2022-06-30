@@ -1,0 +1,9 @@
+**/node_modules
+**/build
+**/coverage
+**/logs
+**/sql
+**/*.log
+.DS_Store
+.env
+.sql*

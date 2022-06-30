@@ -1,0 +1,8 @@
+{
+    "verbose": true,
+    "ext": "ts,json",
+    "watch": [ "src", ".env" ],
+    "env": {
+        "NODE_ENV": "development"
+    }
+}
