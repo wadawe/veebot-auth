@@ -6,5 +6,5 @@
  * Copyright (C) 2022 wadawe
  */
 
-export * from "./auth.config";
+export * from "./service.config";
 export * from "./secrets.config";

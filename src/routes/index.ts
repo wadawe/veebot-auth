@@ -6,4 +6,5 @@
  * Copyright (C) 2022 wadawe
  */
 
+export * as login from "./login.route";
 export * as ping from "./ping.route";

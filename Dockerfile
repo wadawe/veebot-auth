@@ -33,5 +33,5 @@ ENV NODE_ENV=production
 ENV TS_NODE_BASEURL=./build
 
 # Start the service
-EXPOSE 3002
+EXPOSE 3003
 CMD [ "npm", "start" ]

@@ -18,6 +18,8 @@ type SecretsConfig = {
 };
 
 type SecretsConfigStructure = {
+    ENV_BOT_CLIENT_ID : string;
+    ENV_BOT_CLIENT_SECRET : string;
     ENV_DATABASE_HOST : string;
     ENV_DATABASE_USER : string;
     ENV_DATABASE_PASS : string;
@@ -26,6 +28,8 @@ type SecretsConfigStructure = {
     ENV_DATABASE_PORT : number;
     ENV_DATABASE_CONNS : number;
     ENV_DATABASE_FILE : string;
+    ENV_ACCESS_SECRET : string;
+    ENV_REFRESH_SECRET : string;
 };
 
 /**
@@ -35,6 +39,9 @@ const config : SecretsConfig = {
 
     production: {
 
+        ENV_BOT_CLIENT_ID: process.env.ENV_BOT_CLIENT_ID || "",
+        ENV_BOT_CLIENT_SECRET: process.env.ENV_BOT_CLIENT_SECRET || "",
+
         ENV_DATABASE_HOST: process.env.ENV_DATABASE_HOST || "localhost",
         ENV_DATABASE_USER: process.env.ENV_DATABASE_USER || "user",
         ENV_DATABASE_PASS: process.env.ENV_DATABASE_PASS || "pass",
@@ -42,7 +49,10 @@ const config : SecretsConfig = {
         ENV_DATABASE_DIALECT: process.env.ENV_DATABASE_DIALECT || "sqlite",
         ENV_DATABASE_PORT: parseInt( process.env.ENV_DATABASE_PORT || "3306" ),
         ENV_DATABASE_CONNS: parseInt( process.env.ENV_DATABASE_CONNS || "10" ),
-        ENV_DATABASE_FILE: process.env.ENV_DATABASE_FILE || "./.sql"
+        ENV_DATABASE_FILE: process.env.ENV_DATABASE_FILE || "./.sql",
+
+        ENV_ACCESS_SECRET: process.env.ENV_ACCESS_SECRET || "1234567890",
+        ENV_REFRESH_SECRET: process.env.ENV_REFRESH_SECRET || "0987654321"
 
     },
 

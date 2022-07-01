@@ -1,22 +1,24 @@
 /**
- * Auth config file
- * For storing auth configuration details
+ * Service config file
+ * For storing service configuration details
  * New configs need to be added to the config/index.ts file
  *
- * /config/auth.config.ts
+ * /config/service.config.ts
  *
  * Copyright (C) 2022 wadawe
  */
 
 import { ProjectEnvironment } from "../global-types";
 
-type AuthConfig = {
-    production : AuthConfigStructure;
-    development : Partial<AuthConfigStructure>;
-    test : Partial<AuthConfigStructure>;
+type ServiceConfig = {
+    production : ServiceConfigStructure;
+    development : Partial<ServiceConfigStructure>;
+    test : Partial<ServiceConfigStructure>;
 };
 
-type AuthConfigStructure = {
+type ServiceConfigStructure = {
+    websiteUrl : string;
+    refreshExpiry : number;
     logLevel : string;
     expressPort : number;
     forceDatabaseUpdate : boolean;
@@ -24,14 +26,18 @@ type AuthConfigStructure = {
 };
 
 /**
- * The client configuration
+ * The service configuration
  */
-const config : AuthConfig = {
+const config : ServiceConfig = {
 
     production: {
 
+        websiteUrl: "https://veebot.xyz",
+
+        refreshExpiry: 5,
+
         logLevel: "INFO",
-        expressPort: 3002,
+        expressPort: 3003,
 
         forceDatabaseUpdate: false,
         forceDatabaseReset: false
@@ -39,6 +45,7 @@ const config : AuthConfig = {
     },
 
     development: {
+        websiteUrl: "localhost:3000",
         logLevel: "ALL",
         forceDatabaseUpdate: true
     },
@@ -53,7 +60,7 @@ const config : AuthConfig = {
 // Generate the exported config
 // Based on the current environment
 const env = process.env.NODE_ENV as ProjectEnvironment || "production";
-export const authConfig : AuthConfigStructure & { env : ProjectEnvironment } = {
+export const serviceConfig : ServiceConfigStructure & { env : ProjectEnvironment } = {
     env: env,
     ... config.production,
     ... config[ env ]
