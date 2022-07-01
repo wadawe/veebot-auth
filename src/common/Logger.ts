@@ -8,7 +8,7 @@
  */
 
 import { Logger, configure, getLogger as getLog4js } from "log4js";
-import { authConfig } from "../config";
+import { serviceConfig } from "../config";
 import { sleep, getDateString, getTimeString } from "../functions";
 import { ProjectEnvironment } from "../global-types";
 
@@ -49,7 +49,7 @@ export const getLogger = ( id : string ) : Logger => {
                     filename: `logs/${ getDateString() }_${ getTimeString() }_${ id }.log`
                 }
             },
-            categories: { default: { appenders: appenders[ authConfig.env ], level: authConfig.logLevel } }
+            categories: { default: { appenders: appenders[ serviceConfig.env ], level: serviceConfig.logLevel } }
         } );
 
         logger.instance = getLog4js();
@@ -67,10 +67,10 @@ export const getLogger = ( id : string ) : Logger => {
 export const enableLogger = () : string => {
     let log = logger.instance;
     if ( ! log ) {
-        log = getLogger( authConfig.env );
+        log = getLogger( serviceConfig.env );
     }
-    log.level = authConfig.logLevel;
-    return authConfig.logLevel;
+    log.level = serviceConfig.logLevel;
+    return serviceConfig.logLevel;
 };
 
 /**
@@ -80,7 +80,7 @@ export const enableLogger = () : string => {
 export const disableLogger = () : string => {
     let log = logger.instance;
     if ( ! log ) {
-        log = getLogger( authConfig.env );
+        log = getLogger( serviceConfig.env );
     }
     log.level = "OFF";
     return "OFF";
@@ -93,7 +93,7 @@ export const disableLogger = () : string => {
 export const logInfo = ( message : string ) : void => {
     let log = logger.instance;
     if ( ! log ) {
-        log = getLogger( authConfig.env );
+        log = getLogger( serviceConfig.env );
     }
     log.info( message );
 };
@@ -105,7 +105,7 @@ export const logInfo = ( message : string ) : void => {
 export const logDebug = ( message : string ) : void => {
     let log = logger.instance;
     if ( ! log ) {
-        log = getLogger( authConfig.env );
+        log = getLogger( serviceConfig.env );
     }
     log.debug( message );
 };
@@ -117,7 +117,7 @@ export const logDebug = ( message : string ) : void => {
 export const logTrace = ( message : string ) : void => {
     let log = logger.instance;
     if ( ! log ) {
-        log = getLogger( authConfig.env );
+        log = getLogger( serviceConfig.env );
     }
     log.trace( message );
 };
@@ -129,7 +129,7 @@ export const logTrace = ( message : string ) : void => {
 export const logWarn = ( message : string ) : void => {
     let log = logger.instance;
     if ( ! log ) {
-        log = getLogger( authConfig.env );
+        log = getLogger( serviceConfig.env );
     }
     log.warn( message );
 };
@@ -141,7 +141,7 @@ export const logWarn = ( message : string ) : void => {
 export const logError = ( error : Error ) : void => {
     let log = logger.instance;
     if ( ! log ) {
-        log = getLogger( authConfig.env );
+        log = getLogger( serviceConfig.env );
     }
     log.error( `${ error.name } > ${ error.message } : ${ error.stack }` );
 };
@@ -153,7 +153,7 @@ export const logError = ( error : Error ) : void => {
 export const logFatal = async ( error : Error ) : Promise<void> => {
     let log = logger.instance;
     if ( ! log ) {
-        log = getLogger( authConfig.env );
+        log = getLogger( serviceConfig.env );
     }
     log.fatal( `${ error.name } > ${ error.message } : ${ error.stack }` );
     await sleep( 100 );

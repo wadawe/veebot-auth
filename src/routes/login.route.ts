@@ -14,6 +14,7 @@ import { Router, Request, Response } from "express";
 import { secretsConfig, serviceConfig } from "../config";
 import { Login, User } from "../models";
 import { logError } from "../common";
+import { AccessResponse, TokenContent, TokenData } from "../global-types";
 
 type UserData = {
     id : string;
@@ -22,18 +23,6 @@ type UserData = {
     discriminator : string;
     locale : string;
 }
-
-type TokenData = {
-    scope : string;
-    access_token : string;
-    refresh_token : string;
-    expires_in : number;
-    token_type : string;
-}
-
-type TokenContent = {
-    id : string;
-};
 
 const router = Router();
 
@@ -107,7 +96,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
 
             // Return success response
             res.cookie( "refresh", refreshToken, { httpOnly: true, maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000 } );
-            return res.status( 200 ).json( { ... userData, accessToken } );
+            return res.status( 200 ).json( { id: userData.id, accessToken } as AccessResponse );
 
         } ).catch( () => {
             return res.status( 500 ).json( { response: "Failed to identify user." } );

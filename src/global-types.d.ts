@@ -21,3 +21,20 @@ export type ExpressRouteName = keyof typeof expressRouteList;
 export type MiddlewareName = keyof typeof middlewareList;
 
 export type FunctionName = keyof typeof functionList;
+
+export type TokenData = {
+    scope : string;
+    access_token : string;
+    refresh_token : string;
+    expires_in : number;
+    token_type : string;
+}
+
+export type TokenContent = {
+    id : string;
+};
+
+export type AccessResponse = {
+    id : string;
+    accessToken : string;
+};

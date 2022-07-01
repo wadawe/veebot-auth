@@ -14,7 +14,7 @@ import { logRequest } from "../middleware";
 import { logInfo, logDebug } from "../common";
 import * as expressRouteList from "../routes";
 import { ExpressRouteName } from "../global-types";
-import { authConfig } from "../config";
+import { serviceConfig } from "../config";
 import { Server } from "http";
 import cookieParser from "cookie-parser";
 
@@ -38,8 +38,8 @@ export const getApp = () : ExpressApplication => {
     app.use( cookieParser() );
     app.use( "/api", getRouter() );
 
-    const connection = app.listen( authConfig.expressPort, () => {
-        logInfo( `API > Ready : ${ authConfig.expressPort }` );
+    const connection = app.listen( serviceConfig.expressPort, () => {
+        logInfo( `API > Ready : ${ serviceConfig.expressPort }` );
         app.emit( "app_started" );
     } );
 

@@ -11,7 +11,7 @@ import chai, { expect } from "chai";
 import sinonChai from "sinon-chai";
 import { stub, restore } from "sinon";
 import { enableLogger, disableLogger, getLogger, logInfo, logDebug, logTrace, logWarn, logError, logFatal } from "./Logger";
-import { authConfig } from "../config";
+import { serviceConfig } from "../config";
 
 chai.use( sinonChai );
 
@@ -21,7 +21,7 @@ chai.use( sinonChai );
 describe( "GIVEN: /common/Logger", () => {
 
     before( () => {
-        getLogger( `${ authConfig.env }` );
+        getLogger( `${ serviceConfig.env }` );
     } );
 
     after( () => {
@@ -50,8 +50,8 @@ describe( "GIVEN: /common/Logger", () => {
             expect( enableLogger() ).to.be.a( "string" );
         } );
 
-        it( `THEN: expect to return '${ authConfig.logLevel }' with parameters ()`, () => {
-            expect( enableLogger() ).to.equal( authConfig.logLevel );
+        it( `THEN: expect to return '${ serviceConfig.logLevel }' with parameters ()`, () => {
+            expect( enableLogger() ).to.equal( serviceConfig.logLevel );
         } );
 
     } );

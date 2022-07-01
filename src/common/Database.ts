@@ -8,7 +8,7 @@
  */
 
 import { Sequelize, Options } from "sequelize";
-import { secretsConfig, authConfig } from "../config";
+import { secretsConfig, serviceConfig } from "../config";
 import { logInfo, logFatal, logDebug, logTrace } from "../common";
 import * as databaseModelList from "../models";
 import { DatabaseModelName } from "../global-types";
@@ -80,8 +80,8 @@ const registerModels = async () : Promise<void> => {
     // Sync the models to the database
     logDebug( "DATABASE > Syncing models" );
     await connection.sync( {
-        alter: authConfig.forceDatabaseUpdate,
-        force: authConfig.forceDatabaseReset
+        alter: serviceConfig.forceDatabaseUpdate,
+        force: serviceConfig.forceDatabaseReset
     } ).catch( logFatal );
 
 };
