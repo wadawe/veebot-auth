@@ -21,6 +21,7 @@ type ServiceConfigStructure = {
     refreshExpiry : number;
     logLevel : string;
     expressPort : number;
+    secureRequests : boolean;
     forceDatabaseUpdate : boolean;
     forceDatabaseReset : boolean;
 };
@@ -38,6 +39,7 @@ const config : ServiceConfig = {
 
         logLevel: "INFO",
         expressPort: 3003,
+        secureRequests: true,
 
         forceDatabaseUpdate: false,
         forceDatabaseReset: false
@@ -47,11 +49,14 @@ const config : ServiceConfig = {
     development: {
         websiteUrl: "localhost:3000",
         logLevel: "ALL",
+        secureRequests: false,
         forceDatabaseUpdate: true
     },
 
     test: {
+        websiteUrl: "localhost:3000",
         logLevel: "ALL",
+        secureRequests: false,
         forceDatabaseReset: true
     }
 

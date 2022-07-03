@@ -95,7 +95,11 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             }
 
             // Return success response
-            res.cookie( "refresh", refreshToken, { httpOnly: true, maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000 } );
+            res.cookie( "refresh", refreshToken, {
+                httpOnly: true,
+                maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
+                secure: serviceConfig.secureRequests
+            } );
             return res.status( 200 ).json( { id: userData.id, accessToken } as AccessResponse );
 
         } ).catch( () => {

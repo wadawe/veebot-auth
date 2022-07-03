@@ -45,7 +45,11 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
     // Verify login
     if ( ! login || ! login.User ) {
-        res.clearCookie( "refresh", { httpOnly: true, maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000 } );
+        res.clearCookie( "refresh", {
+            httpOnly: true,
+            maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
+            secure: serviceConfig.secureRequests
+        } );
         return res.status( 401 ).json( { response: "Invalid refresh cookie." } );
     }
 
@@ -56,7 +60,11 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
     }
 
     // Return success response
-    res.clearCookie( "refresh", { httpOnly: true, maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000 } );
+    res.clearCookie( "refresh", {
+        httpOnly: true,
+        maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
+        secure: serviceConfig.secureRequests
+    } );
     return res.status( 200 ).json( { response: "Logged out." } );
 
 } );
