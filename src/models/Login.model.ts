@@ -7,7 +7,7 @@
  * Copyright (C) 2022 wadawe
  */
 
-import { Sequelize, Model, INTEGER, CreationOptional, Optional, Association, NonAttribute, STRING, DATE } from "sequelize";
+import { Sequelize, Model, INTEGER, CreationOptional, Optional, Association, NonAttribute, STRING, DATE, BOOLEAN } from "sequelize";
 import { User } from "./User.model";
 
 type LoginAttributes = {
@@ -15,9 +15,11 @@ type LoginAttributes = {
     userId : number;
     refreshToken : string;
     expiresAt : Date;
+    deleted : boolean;
 }
 
-type LoginOptionals = Optional<LoginAttributes, "id">;
+type LoginOptionals = Optional<LoginAttributes, "id"
+    | "deleted">;
 
 /**
  * Define the model class
@@ -31,6 +33,8 @@ export class Login extends Model<LoginAttributes, LoginOptionals> implements Log
     declare refreshToken : string;
 
     declare expiresAt : Date;
+
+    declare deleted : boolean;
 
     declare readonly createdAt : CreationOptional<Date>;
 
@@ -72,6 +76,12 @@ export class Login extends Model<LoginAttributes, LoginOptionals> implements Log
             expiresAt: {
                 type: DATE,
                 allowNull: false
+            },
+
+            deleted: {
+                type: BOOLEAN,
+                allowNull: false,
+                defaultValue: false
             }
 
         }, {

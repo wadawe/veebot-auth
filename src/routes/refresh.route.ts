@@ -32,7 +32,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
     // Verify refresh cookie
     if ( ! req.cookies?.refresh ) {
-        return res.status( 401 ).json( { response: "Missing refresh cookie." } );
+        return res.status( 400 ).json( { response: "Missing refresh cookie." } );
     }
 
     // Get refresh token
@@ -40,14 +40,14 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
     // Get user login
     const login = await Login.findOne( {
-        where: { refreshToken }, include: [
+        where: { refreshToken, deleted: false }, include: [
             { model: Login.associations.User.target, as: Login.associations.User.as, required: true }
         ]
     } ).catch( logError );
 
     // Verify login
     if ( ! login || ! login.User ) {
-        return res.status( 401 ).json( { response: "Invalid refresh cookie." } );
+        return res.status( 400 ).json( { response: "Invalid refresh cookie." } );
     }
 
     // Verify refresh token
@@ -61,7 +61,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
         // Compare refresh token to login
         const resultContent = result as TokenContent;
         if ( resultContent.id !== login.User?.userId ) {
-            return res.status( 403 ).json( { response: "Invalid user login." } );
+            return res.status( 400 ).json( { response: "Invalid user login." } );
         }
 
         // Create access token

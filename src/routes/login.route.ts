@@ -35,7 +35,7 @@ export const getRouter = () : Router => {
 };
 
 /**
- * Handle ALL requests : /login
+ * Handle POST requests : /login
  */
 router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Response ) => {
 
