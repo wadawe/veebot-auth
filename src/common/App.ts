@@ -8,7 +8,7 @@
  */
 
 import express, { Express, Router } from "express";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import { json } from "body-parser";
 import { logRequest } from "../middleware";
 import { logInfo, logDebug } from "../common";
@@ -30,10 +30,14 @@ type ExpressApplication = {
 export const getApp = () : ExpressApplication => {
 
     const app = express();
+    const corsOptions = {
+        credentials: true,
+        origin: [ serviceConfig.websiteUrl ]
+    } as CorsOptions;
 
     app.set( "json spaces", 2 );
     app.use( logRequest );
-    app.use( cors() );
+    app.use( cors( corsOptions ) );
     app.use( json() );
     app.use( cookieParser() );
     app.use( "/api", getRouter() );
