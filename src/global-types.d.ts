@@ -32,9 +32,12 @@ export type TokenData = {
 
 export type TokenContent = {
     id : string;
+    username : string;
+    discriminator : string;
+    avatar : string;
+    locale : string;
 };
 
-export type AccessResponse = {
-    id : string;
+export type AccessResponse = TokenContent & {
     accessToken : string;
 };

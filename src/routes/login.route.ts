@@ -19,9 +19,9 @@ import { AccessResponse, TokenContent, TokenData } from "../global-types";
 type UserData = {
     id : string;
     username : string;
-    avatar : string;
     discriminator : string;
-    locale : string;
+    avatar : string;
+    locale ?: string;
 }
 
 const router = Router();
@@ -65,6 +65,13 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
 
             // Get user data
             const userData : UserData = userResponse.data;
+            const tokenContent : TokenContent = {
+                id: userData.id,
+                username: userData.username.length > 32 ? `${ userData.username.substring( 0, 29 ) }...` : userData.username,
+                discriminator: userData.discriminator,
+                avatar: userData.avatar,
+                locale: userData?.locale || "en-GB"
+            };
 
             // Get stored user
             const user = await getUser( userData.id );
@@ -74,14 +81,14 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
 
             // Create access token
             const accessToken = sign(
-                { id: userData.id } as TokenContent,
+                tokenContent as TokenContent,
                 secretsConfig.ENV_ACCESS_SECRET,
                 { expiresIn: "30m" }
             );
 
             // Create refresh token
             const refreshToken = sign(
-                { id: userData.id } as TokenContent,
+                tokenContent as TokenContent,
                 secretsConfig.ENV_REFRESH_SECRET,
                 { expiresIn: `${ serviceConfig.refreshExpiry }d` }
             );
@@ -100,7 +107,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
                 maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
                 secure: serviceConfig.secureRequests
             } );
-            return res.status( 200 ).json( { id: userData.id, accessToken } as AccessResponse );
+            return res.status( 200 ).json( { ... tokenContent, accessToken } as AccessResponse );
 
         } ).catch( () => {
             return res.status( 500 ).json( { response: "Failed to identify user." } );

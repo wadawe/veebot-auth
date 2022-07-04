@@ -64,15 +64,24 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
             return res.status( 400 ).json( { response: "Invalid user login." } );
         }
 
+        // Define access token contents
+        const tokenContent = {
+            id: resultContent.id,
+            username: resultContent.username.length > 32 ? `${ resultContent.username.substring( 0, 29 ) }...` : resultContent.username,
+            discriminator: resultContent.discriminator,
+            avatar: resultContent.avatar,
+            locale: resultContent.locale
+        };
+
         // Create access token
         const accessToken = sign(
-            { id: resultContent.id } as TokenContent,
+            tokenContent as TokenContent,
             secretsConfig.ENV_ACCESS_SECRET,
             { expiresIn: "30m" }
         );
 
         // Return access token
-        return res.status( 200 ).json( { id: resultContent.id, accessToken } as AccessResponse );
+        return res.status( 200 ).json( { ... tokenContent, accessToken } as AccessResponse );
 
     } );
 
