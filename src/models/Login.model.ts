@@ -69,7 +69,7 @@ export class Login extends Model<LoginAttributes, LoginOptionals> implements Log
             },
 
             refreshToken: {
-                type: STRING( 128 ),
+                type: STRING( 256 ),
                 allowNull: false
             },
 

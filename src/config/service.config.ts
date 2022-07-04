@@ -47,14 +47,14 @@ const config : ServiceConfig = {
     },
 
     development: {
-        websiteUrl: "localhost:3000",
+        websiteUrl: "http://localhost:3000",
         logLevel: "ALL",
         secureRequests: false,
         forceDatabaseUpdate: true
     },
 
     test: {
-        websiteUrl: "localhost:3000",
+        websiteUrl: "http://localhost:3000",
         logLevel: "ALL",
         secureRequests: false,
         forceDatabaseReset: true

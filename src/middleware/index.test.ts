@@ -19,7 +19,7 @@ describe( "GIVEN: /middleware/index", () => {
 
     describe( "WHEN: export", () => {
 
-        it( "THEN: expect to export all command files", () => {
+        it( "THEN: expect to export all middleware files", () => {
             const exportKeys = Object.keys( middlewareList );
             readdirSync( `${ __dirname }/` ).filter( ( fileName ) => {
                 return fileName.endsWith( ".middleware.ts" );

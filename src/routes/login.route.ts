@@ -50,7 +50,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
         client_secret: secretsConfig.ENV_BOT_CLIENT_SECRET,
         grant_type: "authorization_code",
         code: req.body.code,
-        redirect_url: `${ serviceConfig.websiteUrl }/login`
+        redirect_uri: `${ serviceConfig.websiteUrl }/login`
     } ), { headers: {
         "Content-Type": "application/x-www-form-urlencoded"
     } } ).then( ( tokenResponse ) => {
@@ -95,7 +95,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             }
 
             // Return success response
-            res.cookie( "refresh", refreshToken, {
+            res.cookie( "VB_REFRESH", refreshToken, {
                 httpOnly: true,
                 maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
                 secure: serviceConfig.secureRequests

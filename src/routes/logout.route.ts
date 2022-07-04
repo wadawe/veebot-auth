@@ -29,12 +29,12 @@ export const getRouter = () : Router => {
 router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Response ) => {
 
     // Verify refresh cookie
-    if ( ! req.cookies?.refresh ) {
+    if ( ! req.cookies?.VB_REFRESH ) {
         return res.status( 204 ).json( { response: "No refresh token." } );
     }
 
     // Get refresh token
-    const refreshToken : string = req.cookies.refresh;
+    const refreshToken : string = req.cookies.VB_REFRESH;
 
     // Get user login
     const login = await Login.findOne( {
