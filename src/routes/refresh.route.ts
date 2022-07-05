@@ -78,7 +78,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
         );
 
         // Return access token
-        const responseContent : LoginResponse = { accessToken };
+        const responseContent : LoginResponse = { id: resultContent.id, accessToken };
         return res.status( 200 ).json( responseContent );
 
     } );

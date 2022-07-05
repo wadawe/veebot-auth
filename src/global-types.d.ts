@@ -44,5 +44,6 @@ export interface TokenContent {
 }
 
 export interface LoginResponse {
+    id : string;
     accessToken : string;
 }

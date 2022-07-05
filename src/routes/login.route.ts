@@ -96,7 +96,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
                 maxAge: serviceConfig.refreshExpiry * 60 * 1000,
                 secure: serviceConfig.secureRequests
             } );
-            const responseContent : LoginResponse = { accessToken };
+            const responseContent : LoginResponse = { id: userData.id, accessToken };
             return res.status( 200 ).json( responseContent );
 
         } ).catch( () => {
