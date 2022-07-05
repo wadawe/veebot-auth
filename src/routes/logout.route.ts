@@ -45,7 +45,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
     // Verify login
     if ( ! login || ! login.User ) {
-        res.clearCookie( "refresh", {
+        res.clearCookie( "VB_REFRESH", {
             httpOnly: true,
             maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
             secure: serviceConfig.secureRequests
@@ -54,15 +54,15 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
     }
 
     // Update user login
-    const updatedLogin = await login.update( { deleted: true } ).catch( logError );
+    const updatedLogin = await login.update( { invalidated: true } ).catch( logError );
     if ( ! updatedLogin ) {
         return res.status( 401 ).json( { response: "Failed to invalidate refresh token." } );
     }
 
     // Return success response
-    res.clearCookie( "refresh", {
+    res.clearCookie( "VB_REFRESH", {
         httpOnly: true,
-        maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
+        maxAge: serviceConfig.refreshExpiry * 60 * 1000,
         secure: serviceConfig.secureRequests
     } );
     return res.status( 200 ).json( { response: "Logged out." } );

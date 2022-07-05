@@ -22,7 +22,7 @@ export type MiddlewareName = keyof typeof middlewareList;
 
 export type FunctionName = keyof typeof functionList;
 
-export type TokenData = {
+export interface TokenData {
     scope : string;
     access_token : string;
     refresh_token : string;
@@ -30,14 +30,19 @@ export type TokenData = {
     token_type : string;
 }
 
-export type TokenContent = {
+export interface UserData {
     id : string;
     username : string;
     discriminator : string;
     avatar : string;
-    locale : string;
-};
+    locale ?: string;
+}
 
-export type AccessResponse = TokenContent & {
+export interface TokenContent {
+    id : string;
+    discordToken : string;
+}
+
+export interface LoginResponse {
     accessToken : string;
-};
+}

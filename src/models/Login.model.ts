@@ -15,11 +15,11 @@ type LoginAttributes = {
     userId : number;
     refreshToken : string;
     expiresAt : Date;
-    deleted : boolean;
+    invalidated : boolean;
 }
 
 type LoginOptionals = Optional<LoginAttributes, "id"
-    | "deleted">;
+    | "invalidated">;
 
 /**
  * Define the model class
@@ -34,7 +34,7 @@ export class Login extends Model<LoginAttributes, LoginOptionals> implements Log
 
     declare expiresAt : Date;
 
-    declare deleted : boolean;
+    declare invalidated : boolean;
 
     declare readonly createdAt : CreationOptional<Date>;
 
@@ -69,7 +69,7 @@ export class Login extends Model<LoginAttributes, LoginOptionals> implements Log
             },
 
             refreshToken: {
-                type: STRING( 384 ),
+                type: STRING( 256 ),
                 allowNull: false
             },
 
@@ -78,7 +78,7 @@ export class Login extends Model<LoginAttributes, LoginOptionals> implements Log
                 allowNull: false
             },
 
-            deleted: {
+            invalidated: {
                 type: BOOLEAN,
                 allowNull: false,
                 defaultValue: false

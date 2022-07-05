@@ -11,8 +11,8 @@
 import { Router, Request, Response } from "express";
 import { sign, verify } from "jsonwebtoken";
 import { logError } from "../common";
-import { secretsConfig } from "../config";
-import { AccessResponse, TokenContent } from "../global-types";
+import { secretsConfig, serviceConfig } from "../config";
+import { LoginResponse, TokenContent } from "../global-types";
 import { Login } from "../models";
 
 const router = Router();
@@ -40,7 +40,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
     // Get user login
     const login = await Login.findOne( {
-        where: { refreshToken, deleted: false }, include: [
+        where: { refreshToken, invalidated: false }, include: [
             { model: Login.associations.User.target, as: Login.associations.User.as, required: true }
         ]
     } ).catch( logError );
@@ -65,23 +65,21 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
         }
 
         // Define access token contents
-        const tokenContent = {
+        const tokenContent : TokenContent = {
             id: resultContent.id,
-            username: resultContent.username.length > 32 ? `${ resultContent.username.substring( 0, 29 ) }...` : resultContent.username,
-            discriminator: resultContent.discriminator,
-            avatar: resultContent.avatar,
-            locale: resultContent.locale
+            discordToken: resultContent.discordToken
         };
 
         // Create access token
         const accessToken = sign(
             tokenContent as TokenContent,
             secretsConfig.ENV_ACCESS_SECRET,
-            { expiresIn: "30m" }
+            { expiresIn: `${ serviceConfig.accessExpiry }m` }
         );
 
         // Return access token
-        return res.status( 200 ).json( { ... tokenContent, accessToken } as AccessResponse );
+        const responseContent : LoginResponse = { accessToken };
+        return res.status( 200 ).json( responseContent );
 
     } );
 

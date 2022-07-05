@@ -14,15 +14,8 @@ import { Router, Request, Response } from "express";
 import { secretsConfig, serviceConfig } from "../config";
 import { Login, User } from "../models";
 import { logError } from "../common";
-import { AccessResponse, TokenContent, TokenData } from "../global-types";
-
-type UserData = {
-    id : string;
-    username : string;
-    discriminator : string;
-    avatar : string;
-    locale ?: string;
-}
+import { LoginResponse, TokenContent, TokenData, UserData } from "../global-types";
+import moment from "moment";
 
 const router = Router();
 
@@ -67,10 +60,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             const userData : UserData = userResponse.data;
             const tokenContent : TokenContent = {
                 id: userData.id,
-                username: userData.username.length > 32 ? `${ userData.username.substring( 0, 29 ) }...` : userData.username,
-                discriminator: userData.discriminator,
-                avatar: userData.avatar,
-                locale: userData?.locale || "en-GB"
+                discordToken: tokenData.access_token
             };
 
             // Get stored user
@@ -83,19 +73,18 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             const accessToken = sign(
                 tokenContent as TokenContent,
                 secretsConfig.ENV_ACCESS_SECRET,
-                { expiresIn: "30m" }
+                { expiresIn: `${ serviceConfig.accessExpiry }m` }
             );
 
             // Create refresh token
             const refreshToken = sign(
                 tokenContent as TokenContent,
                 secretsConfig.ENV_REFRESH_SECRET,
-                { expiresIn: `${ serviceConfig.refreshExpiry }d` }
+                { expiresIn: `${ serviceConfig.refreshExpiry }m` }
             );
 
             // Save refresh token
-            const expiresAt = new Date();
-            expiresAt.setDate( expiresAt.getDate() + serviceConfig.refreshExpiry );
+            const expiresAt = moment( new Date() ).add( serviceConfig.refreshExpiry, "m" ).toDate();
             const login = Login.create( { userId: user.id, refreshToken, expiresAt } ).catch( logError );
             if ( ! login ) {
                 return res.status( 500 ).json( { response: "Failed to save refresh token." } );
@@ -104,10 +93,11 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             // Return success response
             res.cookie( "VB_REFRESH", refreshToken, {
                 httpOnly: true,
-                maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
+                maxAge: serviceConfig.refreshExpiry * 60 * 1000,
                 secure: serviceConfig.secureRequests
             } );
-            return res.status( 200 ).json( { ... tokenContent, accessToken } as AccessResponse );
+            const responseContent : LoginResponse = { accessToken };
+            return res.status( 200 ).json( responseContent );
 
         } ).catch( () => {
             return res.status( 500 ).json( { response: "Failed to identify user." } );

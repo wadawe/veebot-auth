@@ -18,6 +18,7 @@ type ServiceConfig = {
 
 type ServiceConfigStructure = {
     websiteUrl : string;
+    accessExpiry : number;
     refreshExpiry : number;
     logLevel : string;
     expressPort : number;
@@ -35,7 +36,8 @@ const config : ServiceConfig = {
 
         websiteUrl: "https://veebot.xyz",
 
-        refreshExpiry: 5,
+        accessExpiry: 60,
+        refreshExpiry: 4320,
 
         logLevel: "INFO",
         expressPort: 3003,
@@ -48,6 +50,8 @@ const config : ServiceConfig = {
 
     development: {
         websiteUrl: "http://localhost:3000",
+        accessExpiry: 1,
+        refreshExpiry: 5,
         logLevel: "ALL",
         secureRequests: false,
         forceDatabaseUpdate: true
