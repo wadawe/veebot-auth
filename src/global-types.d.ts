@@ -38,12 +38,11 @@ export interface UserData {
     locale ?: string;
 }
 
-export interface TokenContent {
-    id : string;
+export interface TokenContent extends UserData {
+    locale : string;
     discordToken : string;
 }
 
-export interface LoginResponse {
-    id : string;
+export interface LoginResponse extends TokenContent {
     accessToken : string;
 }

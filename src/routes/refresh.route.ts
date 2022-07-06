@@ -67,6 +67,10 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
         // Define access token contents
         const tokenContent : TokenContent = {
             id: resultContent.id,
+            username: resultContent.username,
+            discriminator: resultContent.discriminator,
+            avatar: resultContent.avatar,
+            locale: resultContent.locale,
             discordToken: resultContent.discordToken
         };
 
@@ -77,8 +81,16 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
             { expiresIn: `${ serviceConfig.accessExpiry }m` }
         );
 
-        // Return access token
-        const responseContent : LoginResponse = { id: resultContent.id, accessToken };
+        // Create and send response
+        const responseContent : LoginResponse = {
+            id: tokenContent.id,
+            username: tokenContent.username,
+            discriminator: tokenContent.discriminator,
+            avatar: tokenContent.avatar,
+            locale: tokenContent.locale,
+            discordToken: tokenContent.discordToken,
+            accessToken
+        };
         return res.status( 200 ).json( responseContent );
 
     } );

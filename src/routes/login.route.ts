@@ -60,6 +60,10 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             const userData : UserData = userResponse.data;
             const tokenContent : TokenContent = {
                 id: userData.id,
+                username: userData.username.length > 32 ? `${ userData.username.substring( 0, 30 ) }..` : userData.username,
+                discriminator: userData.discriminator,
+                avatar: userData.avatar,
+                locale: userData.locale || "en-GB",
                 discordToken: tokenData.access_token
             };
 
@@ -84,19 +88,29 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             );
 
             // Save refresh token
-            const expiresAt = moment( new Date() ).add( serviceConfig.refreshExpiry, "m" ).toDate();
+            const expiresAt = moment( new Date() ).add( serviceConfig.refreshExpiry, "minutes" ).toDate();
             const login = Login.create( { userId: user.id, refreshToken, expiresAt } ).catch( logError );
             if ( ! login ) {
                 return res.status( 500 ).json( { response: "Failed to save refresh token." } );
             }
 
-            // Return success response
+            // Set refresh token cookie
             res.cookie( "VB_REFRESH", refreshToken, {
                 httpOnly: true,
                 maxAge: serviceConfig.refreshExpiry * 60 * 1000,
                 secure: serviceConfig.secureRequests
             } );
-            const responseContent : LoginResponse = { id: userData.id, accessToken };
+
+            // Create and send response
+            const responseContent : LoginResponse = {
+                id: tokenContent.id,
+                username: tokenContent.username,
+                discriminator: tokenContent.discriminator,
+                avatar: tokenContent.avatar,
+                locale: tokenContent.locale,
+                discordToken: tokenContent.discordToken,
+                accessToken
+            };
             return res.status( 200 ).json( responseContent );
 
         } ).catch( () => {

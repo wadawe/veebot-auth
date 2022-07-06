@@ -45,11 +45,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
     // Verify login
     if ( ! login || ! login.User ) {
-        res.clearCookie( "VB_REFRESH", {
-            httpOnly: true,
-            maxAge: serviceConfig.refreshExpiry * 24 * 60 * 60 * 1000,
-            secure: serviceConfig.secureRequests
-        } );
+        clearCookie( res );
         return res.status( 401 ).json( { response: "Invalid refresh cookie." } );
     }
 
@@ -60,11 +56,22 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
     }
 
     // Return success response
+    clearCookie( res );
+    return res.status( 200 ).json( { response: "Logged out." } );
+
+} );
+
+/**
+ * Clear the refresh cookie
+ * @param res The response object
+ */
+const clearCookie = ( res : Response ) => {
+
+    // Clear the cookie
     res.clearCookie( "VB_REFRESH", {
         httpOnly: true,
         maxAge: serviceConfig.refreshExpiry * 60 * 1000,
         secure: serviceConfig.secureRequests
     } );
-    return res.status( 200 ).json( { response: "Logged out." } );
 
-} );
+};
