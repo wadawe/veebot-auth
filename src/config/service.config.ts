@@ -38,8 +38,8 @@ const config : ServiceConfig = {
         websiteUrl: "https://veebot.xyz",
         loginScope: [ "guilds", "guilds.members.read", "identify" ],
 
-        accessExpiry: 10,
-        refreshExpiry: 7200,
+        accessExpiry: 600,
+        refreshExpiry: 86400,
 
         logLevel: "INFO",
         expressPort: 3003,
@@ -52,8 +52,8 @@ const config : ServiceConfig = {
 
     development: {
         websiteUrl: "http://localhost:3000",
-        accessExpiry: 1,
-        refreshExpiry: 5,
+        accessExpiry: 10,
+        refreshExpiry: 30,
         logLevel: "ALL",
         secureRequests: false,
         forceDatabaseUpdate: true

@@ -85,18 +85,18 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             const accessToken = sign(
                 tokenContent as TokenContent,
                 secretsConfig.ENV_ACCESS_SECRET,
-                { expiresIn: `${ serviceConfig.accessExpiry }m` }
+                { expiresIn: `${ serviceConfig.accessExpiry }s` }
             );
 
             // Create refresh token
             const refreshToken = sign(
                 tokenContent as TokenContent,
                 secretsConfig.ENV_REFRESH_SECRET,
-                { expiresIn: `${ serviceConfig.refreshExpiry }m` }
+                { expiresIn: `${ serviceConfig.refreshExpiry }s` }
             );
 
             // Save refresh token
-            const expiresAt = moment( new Date() ).add( serviceConfig.refreshExpiry, "minutes" ).toDate();
+            const expiresAt = moment( new Date() ).add( serviceConfig.refreshExpiry, "seconds" ).toDate();
             const login = Login.create( { userId: user.id, refreshToken, expiresAt } ).catch( logError );
             if ( ! login ) {
                 return res.status( 500 ).json( { response: "Failed to save refresh token." } );
@@ -105,7 +105,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             // Set refresh token cookie
             res.cookie( "VB_REFRESH", refreshToken, {
                 httpOnly: true,
-                maxAge: serviceConfig.refreshExpiry * 60 * 1000,
+                maxAge: serviceConfig.refreshExpiry * 1000,
                 secure: serviceConfig.secureRequests
             } );
 

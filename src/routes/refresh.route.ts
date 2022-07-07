@@ -78,7 +78,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
         const accessToken = sign(
             tokenContent as TokenContent,
             secretsConfig.ENV_ACCESS_SECRET,
-            { expiresIn: `${ serviceConfig.accessExpiry }m` }
+            { expiresIn: `${ serviceConfig.accessExpiry }s` }
         );
 
         // Create and send response
