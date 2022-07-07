@@ -51,6 +51,14 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
         // Get token data
         const tokenData : TokenData = tokenResponse.data;
 
+        // Verify scope
+        const tokenScope = tokenData.scope.split( " " );
+        for ( const loginScope in serviceConfig.loginScope ) {
+            if ( ! ( loginScope in tokenScope ) ) {
+                return res.status( 400 ).json( { response: `Missing login scope: ${ loginScope }` } );
+            }
+        }
+
         // Make identfy request
         axios.get( "https://discordapp.com/api/users/@me", { headers: {
             Authorization: `Bearer ${ tokenData.access_token }`

@@ -18,6 +18,7 @@ type ServiceConfig = {
 
 type ServiceConfigStructure = {
     websiteUrl : string;
+    loginScope : string[];
     accessExpiry : number;
     refreshExpiry : number;
     logLevel : string;
@@ -35,6 +36,7 @@ const config : ServiceConfig = {
     production: {
 
         websiteUrl: "https://veebot.xyz",
+        loginScope: [ "guilds", "guilds.members.read", "identify" ],
 
         accessExpiry: 10,
         refreshExpiry: 7200,
