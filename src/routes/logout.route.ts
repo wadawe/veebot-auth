@@ -70,7 +70,7 @@ const clearCookie = ( res : Response ) => {
     // Clear the cookie
     res.clearCookie( "VB_REFRESH", {
         httpOnly: true,
-        maxAge: serviceConfig.refreshExpiry * 60 * 1000,
+        expires: new Date,
         secure: serviceConfig.secureRequests
     } );
 

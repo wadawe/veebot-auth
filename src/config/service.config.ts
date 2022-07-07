@@ -36,8 +36,8 @@ const config : ServiceConfig = {
 
         websiteUrl: "https://veebot.xyz",
 
-        accessExpiry: 60,
-        refreshExpiry: 4320,
+        accessExpiry: 10,
+        refreshExpiry: 7200,
 
         logLevel: "INFO",
         expressPort: 3003,
