@@ -1,36 +1,38 @@
 # ============
 # BUILD STAGE
 # ============
-FROM node:16.15 as build
-WORKDIR /app
+FROM node:16 as build
+WORKDIR /build
 
 # Install requirements
-COPY package*.json /app/
+COPY LICENSE /build/
+COPY package.json /build/
+COPY package-lock.json /build/
 RUN npm run setup
-RUN npm run setup:modules
 
 # Build source code
-COPY . /app/
+COPY tsconfig.json /build/
+COPY . /build/
 RUN npm run build
 
 # ==========
 # RUN STAGE
 # ==========
-FROM node:16.15 as run
+FROM node:16 as run
 WORKDIR /app
 
 # Install requirements
-COPY package*.json /app/
+COPY LICENSE /app/
+COPY package.json /app/
+COPY package-lock.json /app/
 RUN npm run setup:prod
 
-# Build source code
-COPY LICENSE /app/
-COPY tsconfig.json /app/
-COPY --from=build /app/build /app/build/
+# Copy source code
+COPY --from=build /build/build /app/build/
 
 # Define environment variables
 ENV NODE_ENV=production
-ENV TS_NODE_BASEURL=./build
+ENV TS_NODE_BASEURL=/app/build
 
 # Start the service
 EXPOSE 3003
