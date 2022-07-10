@@ -35,7 +35,7 @@ const config : ServiceConfig = {
 
     production: {
 
-        websiteUrl: "https://veebot.xyz",
+        websiteUrl: "https://veebot.app",
         loginScope: [ "guilds", "identify" ],
 
         accessExpiry: 600,
