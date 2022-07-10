@@ -12,17 +12,23 @@ import * as expressRouteList from "./routes";
 import * as middlewareList from "./middleware";
 import * as functionList from "./functions";
 
+// Auth | Client | Server | Website
 export type ProjectEnvironment = "production" | "development" | "test";
 
+// Auth | Client | Server
 export type DatabaseModelName = keyof typeof databaseModelList;
 
+// Auth | Client | Server
 export type ExpressRouteName = keyof typeof expressRouteList;
 
+// Auth | Client | Server
 export type MiddlewareName = keyof typeof middlewareList;
 
+// Auth | Client | Server
 export type FunctionName = keyof typeof functionList;
 
-export interface TokenData {
+// Auth
+export interface DiscordTokenResponse {
     scope : string;
     access_token : string;
     refresh_token : string;
@@ -30,7 +36,8 @@ export interface TokenData {
     token_type : string;
 }
 
-export interface UserData {
+// Auth | Server | Website
+export interface DiscordUserResponse {
     id : string;
     username : string;
     discriminator : string;
@@ -38,11 +45,13 @@ export interface UserData {
     locale ?: string;
 }
 
-export interface TokenContent extends UserData {
+// Auth | Server | Website
+export interface AuthTokenContent extends DiscordUserResponse {
     locale : string;
     discordToken : string;
 }
 
-export interface LoginResponse extends TokenContent {
+// Auth | Website
+export interface UserAuthResponse extends AuthTokenContent {
     accessToken : string;
 }

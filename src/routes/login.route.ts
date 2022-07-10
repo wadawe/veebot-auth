@@ -14,7 +14,7 @@ import { Router, Request, Response } from "express";
 import { secretsConfig, serviceConfig } from "../config";
 import { Login, User } from "../models";
 import { logError } from "../common";
-import { LoginResponse, TokenContent, TokenData, UserData } from "../global-types";
+import { UserAuthResponse, AuthTokenContent, DiscordTokenResponse, DiscordUserResponse } from "../global-types";
 import moment from "moment";
 
 const router = Router();
@@ -49,10 +49,10 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
     } } ).then( ( tokenResponse ) => {
 
         // Get token data
-        const tokenData : TokenData = tokenResponse.data;
+        const discordTokenData : DiscordTokenResponse = tokenResponse.data;
 
         // Verify scope
-        const tokenScope = tokenData.scope.split( " " );
+        const tokenScope = discordTokenData.scope.split( " " );
         for ( const loginScope in serviceConfig.loginScope ) {
             if ( ! ( loginScope in tokenScope ) ) {
                 return res.status( 400 ).json( { response: `Missing login scope: ${ loginScope }` } );
@@ -61,36 +61,36 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
 
         // Make identfy request
         axios.get( "https://discordapp.com/api/users/@me", { headers: {
-            Authorization: `Bearer ${ tokenData.access_token }`
+            Authorization: `Bearer ${ discordTokenData.access_token }`
         } } ).then( async ( userResponse ) => {
 
             // Get user data
-            const userData : UserData = userResponse.data;
-            const tokenContent : TokenContent = {
-                id: userData.id,
-                username: userData.username.length > 32 ? `${ userData.username.substring( 0, 30 ) }..` : userData.username,
-                discriminator: userData.discriminator,
-                avatar: userData.avatar,
-                locale: userData.locale || "en-GB",
-                discordToken: tokenData.access_token
+            const discordUserData : DiscordUserResponse = userResponse.data;
+            const tokenContent : AuthTokenContent = {
+                id: discordUserData.id,
+                username: discordUserData.username.length > 32 ? `${ discordUserData.username.substring( 0, 30 ) }...` : discordUserData.username,
+                discriminator: discordUserData.discriminator,
+                avatar: discordUserData.avatar,
+                locale: discordUserData.locale || "en-GB",
+                discordToken: discordTokenData.access_token
             };
 
             // Get stored user
-            const user = await getUser( userData.id );
+            const user = await getUser( discordUserData.id );
             if ( ! user ) {
                 return res.status( 500 ).json( { response: "Failed to retrieve user" } );
             }
 
             // Create access token
             const accessToken = sign(
-                tokenContent as TokenContent,
+                tokenContent,
                 secretsConfig.ENV_ACCESS_SECRET,
                 { expiresIn: `${ serviceConfig.accessExpiry }s` }
             );
 
             // Create refresh token
             const refreshToken = sign(
-                tokenContent as TokenContent,
+                tokenContent,
                 secretsConfig.ENV_REFRESH_SECRET,
                 { expiresIn: `${ serviceConfig.refreshExpiry }s` }
             );
@@ -110,7 +110,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             } );
 
             // Create and send response
-            const responseContent : LoginResponse = {
+            const responseContent : UserAuthResponse = {
                 id: tokenContent.id,
                 username: tokenContent.username,
                 discriminator: tokenContent.discriminator,

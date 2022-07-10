@@ -12,7 +12,7 @@ import { Router, Request, Response } from "express";
 import { sign, verify } from "jsonwebtoken";
 import { logError } from "../common";
 import { secretsConfig, serviceConfig } from "../config";
-import { LoginResponse, TokenContent } from "../global-types";
+import { UserAuthResponse, AuthTokenContent } from "../global-types";
 import { Login } from "../models";
 
 const router = Router();
@@ -68,13 +68,13 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
         }
 
         // Compare refresh token to login
-        const resultContent = result as TokenContent;
+        const resultContent = result as AuthTokenContent;
         if ( resultContent.id !== userId ) {
             return res.status( 400 ).json( { response: "Invalid user login" } );
         }
 
         // Define access token contents
-        const tokenContent : TokenContent = {
+        const tokenContent : AuthTokenContent = {
             id: resultContent.id,
             username: resultContent.username,
             discriminator: resultContent.discriminator,
@@ -85,13 +85,13 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
 
         // Create access token
         const accessToken = sign(
-            tokenContent as TokenContent,
+            tokenContent,
             secretsConfig.ENV_ACCESS_SECRET,
             { expiresIn: `${ serviceConfig.accessExpiry }s` }
         );
 
         // Create and send response
-        const responseContent : LoginResponse = {
+        const responseContent : UserAuthResponse = {
             ... tokenContent,
             accessToken
         };
