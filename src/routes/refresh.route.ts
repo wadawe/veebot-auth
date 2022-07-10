@@ -32,7 +32,7 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
 
     // Verify refresh cookie
     if ( ! req.cookies?.VB_REFRESH ) {
-        return res.status( 400 ).json( { response: "Missing refresh cookie." } );
+        return res.status( 400 ).json( { response: "Missing refresh cookie" } );
     }
 
     // Get refresh token
@@ -52,7 +52,7 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
 
     // Verify login
     if ( ! login || ! login.User ) {
-        return res.status( 400 ).json( { response: "Invalid refresh cookie." } );
+        return res.status( 400 ).json( { response: "Invalid refresh cookie" } );
     }
 
     // Verify refresh token
@@ -60,13 +60,13 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
 
         // Verify error
         if ( error ) {
-            return res.status( 403 ).json( { response: "Invalid refresh token." } );
+            return res.status( 403 ).json( { response: "Invalid refresh token" } );
         }
 
         // Compare refresh token to login
         const resultContent = result as TokenContent;
         if ( resultContent.id !== userId ) {
-            return res.status( 400 ).json( { response: "Invalid user login." } );
+            return res.status( 400 ).json( { response: "Invalid user login" } );
         }
 
         // Define access token contents

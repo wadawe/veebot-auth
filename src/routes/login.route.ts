@@ -34,7 +34,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
 
     // Verify auth code
     if ( ! req.body.code ) {
-        return res.status( 400 ).json( { response: "Missing authorisation code." } );
+        return res.status( 400 ).json( { response: "Missing authorisation code" } );
     }
 
     // Make token request
@@ -78,7 +78,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             // Get stored user
             const user = await getUser( userData.id );
             if ( ! user ) {
-                return res.status( 500 ).json( { response: "Failed to retrieve user." } );
+                return res.status( 500 ).json( { response: "Failed to retrieve user" } );
             }
 
             // Create access token
@@ -99,7 +99,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             const expiresAt = moment( new Date() ).add( serviceConfig.refreshExpiry, "seconds" ).toDate();
             const login = Login.create( { userId: user.id, refreshToken, expiresAt } ).catch( logError );
             if ( ! login ) {
-                return res.status( 500 ).json( { response: "Failed to save refresh token." } );
+                return res.status( 500 ).json( { response: "Failed to save refresh token" } );
             }
 
             // Set refresh token cookie
@@ -122,11 +122,11 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             return res.status( 200 ).json( responseContent );
 
         } ).catch( () => {
-            return res.status( 500 ).json( { response: "Failed to identify user." } );
+            return res.status( 500 ).json( { response: "Failed to identify user" } );
         } );
 
     } ).catch( () => {
-        return res.status( 400 ).json( { response: "Invalid authorisation code." } );
+        return res.status( 400 ).json( { response: "Invalid authorisation code" } );
     } );
 
 } );

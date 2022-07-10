@@ -30,7 +30,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
     // Verify refresh cookie
     if ( ! req.cookies?.VB_REFRESH ) {
-        return res.status( 204 ).json( { response: "No refresh token." } );
+        return res.status( 204 ).json( { response: "No refresh token" } );
     }
 
     // Get refresh token
@@ -46,18 +46,18 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
     // Verify login
     if ( ! login || ! login.User ) {
         clearCookie( res );
-        return res.status( 401 ).json( { response: "Invalid refresh cookie." } );
+        return res.status( 401 ).json( { response: "Invalid refresh cookie" } );
     }
 
     // Update user login
     const updatedLogin = await login.update( { invalidated: true } ).catch( logError );
     if ( ! updatedLogin ) {
-        return res.status( 401 ).json( { response: "Failed to invalidate refresh token." } );
+        return res.status( 401 ).json( { response: "Failed to invalidate refresh token" } );
     }
 
     // Return success response
     clearCookie( res );
-    return res.status( 200 ).json( { response: "Logged out." } );
+    return res.status( 200 ).json( { response: "Logged out" } );
 
 } );
 
