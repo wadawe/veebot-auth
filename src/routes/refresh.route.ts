@@ -26,9 +26,9 @@ export const getRouter = () : Router => {
 };
 
 /**
- * Handle GET requests : /refresh
+ * Handle GET requests : /refresh/:userId
  */
-router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Response ) => {
+router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, res : Response ) => {
 
     // Verify refresh cookie
     if ( ! req.cookies?.VB_REFRESH ) {
@@ -37,10 +37,15 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
     // Get refresh token
     const refreshToken : string = req.cookies.VB_REFRESH;
+    const userId : string = req.params.userId;
 
     // Get user login
     const login = await Login.findOne( {
-        where: { refreshToken, invalidated: false }, include: [
+        where: {
+            userId,
+            refreshToken,
+            invalidated: false
+        }, include: [
             { model: Login.associations.User.target, as: Login.associations.User.as, required: true }
         ]
     } ).catch( logError );
@@ -60,7 +65,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
         // Compare refresh token to login
         const resultContent = result as TokenContent;
-        if ( resultContent.id !== login.User?.userId ) {
+        if ( resultContent.id !== userId ) {
             return res.status( 400 ).json( { response: "Invalid user login." } );
         }
 
@@ -83,12 +88,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
 
         // Create and send response
         const responseContent : LoginResponse = {
-            id: tokenContent.id,
-            username: tokenContent.username,
-            discriminator: tokenContent.discriminator,
-            avatar: tokenContent.avatar,
-            locale: tokenContent.locale,
-            discordToken: tokenContent.discordToken,
+            ... tokenContent,
             accessToken
         };
         return res.status( 200 ).json( responseContent );

@@ -98,6 +98,10 @@ export class Login extends Model<LoginAttributes, LoginOptionals> implements Log
                 {
                     unique: false,
                     fields: [ "refreshToken" ]
+                },
+                {
+                    unique: false,
+                    fields: [ "userId", "refreshToken" ]
                 }
             ]
 
