@@ -30,6 +30,11 @@ export const getRouter = () : Router => {
  */
 router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, res : Response ) => {
 
+    // Verify user id
+    if ( ! req.params.userId || isNaN( Number( req.params.userId ) ) ) {
+        return res.status( 400 ).json( { response: "Invalid user id" } );
+    }
+
     // Verify refresh cookie
     if ( ! req.cookies?.VB_REFRESH ) {
         return res.status( 400 ).json( { response: "Missing refresh cookie" } );
@@ -42,7 +47,6 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
     // Get user login
     const login = await Login.findOne( {
         where: {
-            userId,
             refreshToken,
             invalidated: false
         }, include: [
