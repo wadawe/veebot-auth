@@ -27,6 +27,11 @@ export type MiddlewareName = keyof typeof middlewareList;
 // Auth | Client | Server
 export type FunctionName = keyof typeof functionList;
 
+// Auth | Client | Server | Website
+export interface ResponseErrorContent {
+    response : string;
+}
+
 // Auth
 export interface DiscordTokenResponse {
     scope : string;

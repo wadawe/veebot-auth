@@ -46,13 +46,13 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
     // Verify login
     if ( ! login || ! login.User ) {
         clearCookie( res );
-        return res.status( 401 ).json( { response: "Invalid refresh cookie" } );
+        return res.status( 205 ).json( { response: "Invalid refresh cookie" } );
     }
 
     // Update user login
     const updatedLogin = await login.update( { invalidated: true } ).catch( logError );
     if ( ! updatedLogin ) {
-        return res.status( 401 ).json( { response: "Failed to invalidate refresh token" } );
+        return res.status( 500 ).json( { response: "Failed to invalidate refresh token" } );
     }
 
     // Return success response

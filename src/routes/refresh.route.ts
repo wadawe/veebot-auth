@@ -55,8 +55,11 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
     } ).catch( logError );
 
     // Verify login
+    if ( login === undefined ) {
+        return res.status( 500 ).json( { response: "Failed to validate refresh token" } );
+    }
     if ( ! login || ! login.User ) {
-        return res.status( 400 ).json( { response: "Invalid refresh cookie" } );
+        return res.status( 400 ).json( { response: "Invalid refresh token" } );
     }
 
     // Verify refresh token
@@ -69,7 +72,7 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
 
         // Compare refresh token to login
         const resultContent = result as AuthTokenContent;
-        if ( resultContent.id !== userId ) {
+        if ( resultContent.id !== userId || userId !== login.User?.userId ) {
             return res.status( 400 ).json( { response: "Invalid user login" } );
         }
 
