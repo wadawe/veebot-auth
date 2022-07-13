@@ -52,8 +52,8 @@ const config : ServiceConfig = {
 
     development: {
         websiteUrl: "http://localhost:3000",
-        accessExpiry: 10,
-        refreshExpiry: 30,
+        accessExpiry: 60,
+        refreshExpiry: 300,
         logLevel: "ALL",
         secureRequests: false,
         forceDatabaseUpdate: true
@@ -61,6 +61,8 @@ const config : ServiceConfig = {
 
     test: {
         websiteUrl: "http://localhost:3000",
+        accessExpiry: 5,
+        refreshExpiry: 60,
         logLevel: "ALL",
         secureRequests: false,
         forceDatabaseReset: true

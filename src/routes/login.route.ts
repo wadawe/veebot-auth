@@ -84,14 +84,14 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             // Create access token
             const accessToken = sign(
                 tokenContent,
-                secretsConfig.ENV_ACCESS_SECRET,
+                secretsConfig.ENV_USER_ACCESS_SECRET,
                 { expiresIn: `${ serviceConfig.accessExpiry }s` }
             );
 
             // Create refresh token
             const refreshToken = sign(
                 tokenContent,
-                secretsConfig.ENV_REFRESH_SECRET,
+                secretsConfig.ENV_USER_REFRESH_SECRET,
                 { expiresIn: `${ serviceConfig.refreshExpiry }s` }
             );
 

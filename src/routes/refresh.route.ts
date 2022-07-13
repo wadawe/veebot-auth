@@ -63,7 +63,7 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
     }
 
     // Verify refresh token
-    verify( refreshToken, secretsConfig.ENV_REFRESH_SECRET, ( error, result ) => {
+    verify( refreshToken, secretsConfig.ENV_USER_REFRESH_SECRET, ( error, result ) => {
 
         // Verify error
         if ( error ) {
@@ -89,7 +89,7 @@ router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, r
         // Create access token
         const accessToken = sign(
             tokenContent,
-            secretsConfig.ENV_ACCESS_SECRET,
+            secretsConfig.ENV_USER_ACCESS_SECRET,
             { expiresIn: `${ serviceConfig.accessExpiry }s` }
         );
 
