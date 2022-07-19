@@ -8,7 +8,6 @@
  */
 
 import * as databaseModelList from "./models";
-import * as expressRouteList from "./routes";
 import * as middlewareList from "./middleware";
 import * as functionList from "./functions";
 
@@ -17,9 +16,6 @@ export type ProjectEnvironment = "production" | "development" | "test";
 
 // Auth | Client | Server
 export type DatabaseModelName = keyof typeof databaseModelList;
-
-// Auth | Client | Server
-export type ExpressRouteName = keyof typeof expressRouteList;
 
 // Auth | Client | Server
 export type MiddlewareName = keyof typeof middlewareList;

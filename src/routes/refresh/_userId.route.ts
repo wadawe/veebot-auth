@@ -1,19 +1,18 @@
 /**
  * Express route file
  * For routing express application requests
- * New routes need to be added to the routes/index.ts file
  *
- * /routes/ping.route.ts
+ * /routes/refresh/_userId.route.ts
  *
  * Copyright (C) 2022 wadawe
  */
 
 import { Router, Request, Response } from "express";
 import { sign, verify } from "jsonwebtoken";
-import { logError } from "../common";
-import { secretsConfig, serviceConfig } from "../config";
-import { UserAuthResponse, AuthTokenContent } from "../global-types";
-import { Login } from "../models";
+import { logError } from "../../common";
+import { secretsConfig, serviceConfig } from "../../config";
+import { UserAuthResponse, AuthTokenContent } from "../../global-types";
+import { Login } from "../../models";
 
 const router = Router();
 
@@ -28,7 +27,7 @@ export const getRouter = () : Router => {
 /**
  * Handle GET requests : /refresh/:userId
  */
-router.get( "/:userId", [ /* middleware functions */ ], async ( req : Request, res : Response ) => {
+router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Response ) => {
 
     // Verify user id
     if ( ! req.params.userId || isNaN( Number( req.params.userId ) ) ) {

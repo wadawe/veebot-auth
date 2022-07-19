@@ -1,7 +1,6 @@
 /**
  * Express route file
  * For routing express application requests
- * New routes need to be added to the routes/index.ts file
  *
  * /routes/login.route.ts
  *

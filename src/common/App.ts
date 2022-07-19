@@ -12,11 +12,10 @@ import cors, { CorsOptions } from "cors";
 import { json } from "body-parser";
 import { logRequest } from "../middleware";
 import { logInfo, logDebug } from "../common";
-import * as expressRouteList from "../routes";
-import { ExpressRouteName } from "../global-types";
 import { serviceConfig } from "../config";
 import { Server } from "http";
 import cookieParser from "cookie-parser";
+import { lstatSync, readdirSync } from "fs";
 
 type ExpressApplication = {
     app : Express;
@@ -40,7 +39,7 @@ export const getApp = () : ExpressApplication => {
     app.use( cors( corsOptions ) );
     app.use( json() );
     app.use( cookieParser() );
-    app.use( "/api", getRouter() );
+    app.use( "/api", getDirRouter( `${ __dirname }/../routes`, "" ) );
 
     const connection = app.listen( serviceConfig.expressPort, () => {
         logInfo( `API > Ready : ${ serviceConfig.expressPort }` );
@@ -53,17 +52,41 @@ export const getApp = () : ExpressApplication => {
 
 /**
  * Get and assign all of the defined Express routes
+ * @param directory The directory to iterate through
+ * @param startingRoute The route path to start from
  * @returns An express router
  */
-const getRouter = () : Router => {
+const getDirRouter = ( directory : string, startingRoute : string ) : Router => {
 
+    // List contents of directory
     const router = Router();
+    const dirFiles = readdirSync( directory );
 
-    for ( const routeName of Object.keys( expressRouteList ) ) {
-        logDebug( `API > Registering route : ${ routeName }` );
-        router.use( `/${ routeName }`, expressRouteList[ routeName as ExpressRouteName ].getRouter() );
+    // Iterate directory contents
+    for ( const fileName of dirFiles ) {
+
+        const filePath = `${ directory }/${ fileName }`;
+        const fileStats = lstatSync( filePath );
+
+        // Iterate sub-directory
+        if ( fileStats.isDirectory() ) {
+            const routeName = fileName.replaceAll( "_", ":" );
+            const nextRoute = `${ startingRoute }/${ routeName }`;
+            router.use( getDirRouter( filePath, nextRoute ) );
+        }
+
+        // Load route files
+        else if ( fileStats.isFile() && fileName.endsWith( ".route.ts" ) ) {
+            const routeName = fileName.replaceAll( "_", ":" ).replace( ".route.ts", "" );
+            const nextRoute = `${ startingRoute }/${ routeName }`;
+            const routeContents = require( filePath );
+            logDebug( `API > Registering route : ${ nextRoute }` );
+            router.use( nextRoute, routeContents.getRouter() );
+        }
+
     }
 
+    // Return loaded router
     return router;
 
 };
