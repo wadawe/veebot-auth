@@ -14,7 +14,7 @@ import { secretsConfig, serviceConfig } from "../../config";
 import { UserAuthResponse, AuthTokenContent } from "../../global-types";
 import { Login } from "../../models";
 
-const router = Router();
+const router = Router( { mergeParams: true } );
 
 /**
  * Get the router for this endpoint

@@ -9,7 +9,7 @@
 
 import { Router, Request, Response } from "express";
 
-const router = Router();
+const router = Router( { mergeParams: true } );
 
 /**
  * Get the router for this endpoint

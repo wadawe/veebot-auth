@@ -39,7 +39,7 @@ export const getApp = () : ExpressApplication => {
     app.use( cors( corsOptions ) );
     app.use( json() );
     app.use( cookieParser() );
-    app.use( "/api", getDirRouter( `${ __dirname }/../routes`, "" ) );
+    app.use( getDirRouter( `${ __dirname }/../routes`, "/api" ) );
 
     const connection = app.listen( serviceConfig.expressPort, () => {
         logInfo( `API > Ready : ${ serviceConfig.expressPort }` );
@@ -59,7 +59,7 @@ export const getApp = () : ExpressApplication => {
 const getDirRouter = ( directory : string, startingRoute : string ) : Router => {
 
     // List contents of directory
-    const router = Router();
+    const router = Router( { mergeParams: true } );
     const dirFiles = readdirSync( directory );
 
     // Iterate directory contents

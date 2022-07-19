@@ -16,7 +16,7 @@ import { logError } from "../common";
 import { UserAuthResponse, AuthTokenContent, DiscordTokenResponse, DiscordUserResponse } from "../global-types";
 import moment from "moment";
 
-const router = Router();
+const router = Router( { mergeParams: true } );
 
 /**
  * Get the router for this endpoint

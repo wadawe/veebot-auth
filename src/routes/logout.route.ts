@@ -12,7 +12,7 @@ import { serviceConfig } from "../config";
 import { Login } from "../models";
 import { logError } from "../common";
 
-const router = Router();
+const router = Router( { mergeParams: true } );
 
 /**
  * Get the router for this endpoint
