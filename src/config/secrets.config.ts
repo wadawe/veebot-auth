@@ -9,7 +9,7 @@
  */
 
 import { getDateString, getTimeString } from "../functions";
-import { ProjectEnvironment } from "../global-types";
+import { ProjectEnvironment } from "../types/ProjectEnvironment";
 
 type SecretsConfig = {
     production : SecretsConfigStructure;

@@ -10,7 +10,7 @@
 import { expect } from "chai";
 import { readdirSync } from "fs";
 import * as middlewareList from "../middleware";
-import { MiddlewareName } from "../global-types";
+import { MiddlewareName } from "../types/MiddlewareName";
 
 /**
  * Test the related file contents

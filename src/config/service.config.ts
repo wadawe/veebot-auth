@@ -8,7 +8,7 @@
  * Copyright (C) 2022 wadawe
  */
 
-import { ProjectEnvironment } from "../global-types";
+import { ProjectEnvironment } from "../types/ProjectEnvironment";
 
 type ServiceConfig = {
     production : ServiceConfigStructure;

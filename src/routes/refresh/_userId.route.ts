@@ -11,8 +11,9 @@ import { Router, Request, Response } from "express";
 import { sign, verify } from "jsonwebtoken";
 import { logError } from "../../common";
 import { secretsConfig, serviceConfig } from "../../config";
-import { UserAuthResponse, AuthTokenContent } from "../../global-types";
 import { Login } from "../../models";
+import { AuthTokenContents } from "../../types/AuthTokenContents";
+import { UserLoginResponse } from "../../types/UserLoginResponse";
 
 const router = Router( { mergeParams: true } );
 
@@ -70,13 +71,13 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
         }
 
         // Compare refresh token to login
-        const resultContent = result as AuthTokenContent;
+        const resultContent = result as AuthTokenContents;
         if ( resultContent.id !== userId || userId !== login.User?.userId ) {
             return res.status( 400 ).json( { response: "Invalid user login" } );
         }
 
         // Define access token contents
-        const tokenContent : AuthTokenContent = {
+        const tokenContent : AuthTokenContents = {
             id: resultContent.id,
             username: resultContent.username,
             discriminator: resultContent.discriminator,
@@ -93,7 +94,7 @@ router.get( "/", [ /* middleware functions */ ], async ( req : Request, res : Re
         );
 
         // Create and send response
-        const responseContent : UserAuthResponse = {
+        const responseContent : UserLoginResponse = {
             ... tokenContent,
             accessToken
         };

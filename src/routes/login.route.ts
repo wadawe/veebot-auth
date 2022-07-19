@@ -7,14 +7,17 @@
  * Copyright (C) 2022 wadawe
  */
 
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import moment from "moment";
 import { sign } from "jsonwebtoken";
 import { Router, Request, Response } from "express";
 import { secretsConfig, serviceConfig } from "../config";
 import { Login, User } from "../models";
 import { logError } from "../common";
-import { UserAuthResponse, AuthTokenContent, DiscordTokenResponse, DiscordUserResponse } from "../global-types";
-import moment from "moment";
+import { DiscordsTokenResponse } from "../types/DiscordsTokenResponse";
+import { UserLoginResponse } from "../types/UserLoginResponse";
+import { DiscordsUserResponse } from "../types/DiscordsUserResponse";
+import { AuthTokenContents } from "../types/AuthTokenContents";
 
 const router = Router( { mergeParams: true } );
 
@@ -45,13 +48,10 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
         redirect_uri: `${ serviceConfig.websiteUrl }/login`
     } ), { headers: {
         "Content-Type": "application/x-www-form-urlencoded"
-    } } ).then( ( tokenResponse ) => {
-
-        // Get token data
-        const discordTokenData : DiscordTokenResponse = tokenResponse.data;
+    } } ).then( ( tokenResponse : AxiosResponse<DiscordsTokenResponse> ) => {
 
         // Verify scope
-        const tokenScope = discordTokenData.scope.split( " " );
+        const tokenScope = tokenResponse.data.scope.split( " " );
         for ( const loginScope in serviceConfig.loginScope ) {
             if ( ! ( loginScope in tokenScope ) ) {
                 return res.status( 400 ).json( { response: `Login missing scope: ${ loginScope }` } );
@@ -60,22 +60,21 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
 
         // Make identfy request
         axios.get( "https://discordapp.com/api/users/@me", { headers: {
-            Authorization: `Bearer ${ discordTokenData.access_token }`
-        } } ).then( async ( userResponse ) => {
+            Authorization: `Bearer ${ tokenResponse.data.access_token }`
+        } } ).then( async ( userResponse : AxiosResponse<DiscordsUserResponse> ) => {
 
             // Get user data
-            const discordUserData : DiscordUserResponse = userResponse.data;
-            const tokenContent : AuthTokenContent = {
-                id: discordUserData.id,
-                username: discordUserData.username.length > 32 ? `${ discordUserData.username.substring( 0, 30 ) }...` : discordUserData.username,
-                discriminator: discordUserData.discriminator,
-                avatar: discordUserData.avatar,
-                locale: discordUserData.locale || "en-GB",
-                discordToken: discordTokenData.access_token
+            const tokenContent : AuthTokenContents = {
+                id: userResponse.data.id,
+                username: userResponse.data.username.length > 32 ? `${ userResponse.data.username.substring( 0, 30 ) }...` : userResponse.data.username,
+                discriminator: userResponse.data.discriminator,
+                avatar: userResponse.data.avatar,
+                locale: userResponse.data.locale || "en-GB",
+                discordToken: tokenResponse.data.access_token
             };
 
             // Get stored user
-            const user = await getUser( discordUserData.id );
+            const user = await getUser( userResponse.data.id );
             if ( ! user ) {
                 return res.status( 500 ).json( { response: "Failed to retrieve user from database" } );
             }
@@ -109,7 +108,7 @@ router.post( "/", [ /* middleware functions */ ], ( req : Request, res : Respons
             } );
 
             // Create and send response
-            const responseContent : UserAuthResponse = {
+            const responseContent : UserLoginResponse = {
                 id: tokenContent.id,
                 username: tokenContent.username,
                 discriminator: tokenContent.discriminator,

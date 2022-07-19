@@ -10,7 +10,7 @@
 import { Logger, configure, getLogger as getLog4js } from "log4js";
 import { serviceConfig } from "../config";
 import { sleep, getDateString, getTimeString } from "../functions";
-import { ProjectEnvironment } from "../global-types";
+import { ProjectEnvironment } from "../types/ProjectEnvironment";
 
 type LoggerStructure = {
     instance ?: Logger;

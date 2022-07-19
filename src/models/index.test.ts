@@ -10,7 +10,7 @@
 import { expect } from "chai";
 import { readdirSync } from "fs";
 import * as databaseModelList from "../models";
-import { DatabaseModelName } from "../global-types";
+import { DatabaseModelName } from "../types/DatabaseModelName";
 
 /**
  * Test the related file contents

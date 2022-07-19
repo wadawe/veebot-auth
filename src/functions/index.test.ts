@@ -10,7 +10,7 @@
 import { expect } from "chai";
 import { readdirSync } from "fs";
 import * as functionList from ".";
-import { FunctionName } from "../global-types";
+import { FunctionName } from "../types/FunctionName";
 
 /**
  * Test the related file contents

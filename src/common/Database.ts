@@ -11,7 +11,7 @@ import { Sequelize, Options } from "sequelize";
 import { secretsConfig, serviceConfig } from "../config";
 import { logInfo, logFatal, logDebug, logTrace } from "../common";
 import * as databaseModelList from "../models";
-import { DatabaseModelName } from "../global-types";
+import { DatabaseModelName } from "../types/DatabaseModelName";
 
 /**
  * Global connection session
