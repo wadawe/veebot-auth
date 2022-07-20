@@ -1,0 +1,4 @@
+[submodule "src/types"]
+	path = src/types
+	url = https://github.com/wadawe/veebot-types.git
+	branch = main

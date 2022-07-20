@@ -6,6 +6,7 @@
     "scripts": {
         "setup": "npm ci -f",
         "setup:prod": "npm run setup -- --only=prod",
+        "setup:modules": "git submodule update --init --recursive",
         "start": "node -r dotenv/config ./build/index.js",
         "dev": "npx nodemon -r dotenv/config ./src/index.ts",
         "build": "npx tsc -p .",

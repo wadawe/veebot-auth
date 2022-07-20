@@ -13,6 +13,7 @@ RUN npm run setup
 # Build source code
 COPY tsconfig.json /build/
 COPY . /build/
+RUN npm run setup:modules
 RUN npm run build
 
 # ==========
