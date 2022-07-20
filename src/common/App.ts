@@ -11,7 +11,7 @@ import express, { Express, Router } from "express";
 import cors, { CorsOptions } from "cors";
 import { json } from "body-parser";
 import { logRequest } from "../middleware";
-import { logInfo, logDebug } from "../common";
+import { logInfo, logError } from "../common";
 import { serviceConfig } from "../config";
 import { Server } from "http";
 import cookieParser from "cookie-parser";
@@ -76,12 +76,17 @@ const getDirRouter = ( directory : string, startingRoute : string ) : Router => 
         }
 
         // Load route files
-        else if ( fileStats.isFile() && fileName.endsWith( ".route.ts" ) ) {
-            const routeName = fileName.replaceAll( "_", ":" ).replace( ".route.ts", "" );
+        else if ( fileName.includes( `.route.${ serviceConfig.fileExtension }` ) ) {
+            const routeName = fileName.replaceAll( "_", ":" ).replace( `.route.${ serviceConfig.fileExtension }`, "" );
             const nextRoute = `${ startingRoute }/${ routeName }`;
             const routeContents = require( filePath );
-            logDebug( `API > Registering route : ${ nextRoute }` );
+            logInfo( `API > Registering route : ${ nextRoute }` );
             router.use( nextRoute, routeContents.getRouter() );
+        }
+
+        // Uh oh
+        else {
+            logError( new Error( `Failed to load file : ${ filePath }` ) );
         }
 
     }

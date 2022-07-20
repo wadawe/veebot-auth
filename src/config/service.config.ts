@@ -26,6 +26,7 @@ type ServiceConfigStructure = {
     secureRequests : boolean;
     forceDatabaseUpdate : boolean;
     forceDatabaseReset : boolean;
+    fileExtension : string;
 };
 
 /**
@@ -46,7 +47,9 @@ const config : ServiceConfig = {
         secureRequests: true,
 
         forceDatabaseUpdate: false,
-        forceDatabaseReset: false
+        forceDatabaseReset: false,
+
+        fileExtension: "js"
 
     },
 
@@ -56,7 +59,8 @@ const config : ServiceConfig = {
         refreshExpiry: 300,
         logLevel: "ALL",
         secureRequests: false,
-        forceDatabaseUpdate: true
+        forceDatabaseUpdate: true,
+        fileExtension: "ts"
     },
 
     test: {
